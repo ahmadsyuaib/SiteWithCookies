@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Cookie tester</title>
+</head>
+
+<body>
+    <h1>Cookie tester page</h1>
+    <p>
+        <a href="/set-cookie" id="set">Set cookies (server)</a>
+    </p>
+
+    <h2>document.cookie (JS-visible)</h2>
+    <pre id="jscookie">loading…</pre>
+
+    <h2>Fetch /show-server-cookies (what the server receives)</h2>
+    <pre id="srvcookies">loading…</pre>
+
+    <script>
+        function refresh() {
+            document.getElementById('jscookie').textContent = document.cookie || '(no js cookies)';
+            fetch('/show-server-cookies')
+                .then(r => r.json())
+                .then(j => {
+                    document.getElementById('srvcookies').textContent = JSON.stringify(j, null, 2);
+                })
+                .catch(e => {
+                    document.getElementById('srvcookies').textContent = 'fetch error: ' + e;
+                });
+        }
+        refresh();
+        // refresh every 2s so you can click set-cookie and see changes
+        setInterval(refresh, 2000);
+    </script>
+</body>
+
+</html>
